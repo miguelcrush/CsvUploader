@@ -102,3 +102,4 @@ dist
 
 # TernJS port file
 .tern-port
+/src/BackEnd/CsvUploaderBackend/CdvUploader.Api/appsettings.localhost.json

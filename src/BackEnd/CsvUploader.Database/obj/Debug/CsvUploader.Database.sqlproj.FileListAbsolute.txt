@@ -1,0 +1,16 @@
+C:\Users\mike_\source\repos\CsvUploader\src\BackEnd\CsvUploaderBackend\CsvUploader.Database\bin\Debug\CsvUploader.Database.dacpac
+C:\Users\mike_\source\repos\CsvUploader\src\BackEnd\CsvUploaderBackend\CsvUploader.Database\bin\Debug\CsvUploader.Database.dll
+C:\Users\mike_\source\repos\CsvUploader\src\BackEnd\CsvUploaderBackend\CsvUploader.Database\bin\Debug\CsvUploader.Database.pdb
+C:\Users\mike_\source\repos\CsvUploader\src\BackEnd\CsvUploaderBackend\CsvUploader.Database\obj\Debug\CsvUploader.Database.sqlproj.AssemblyReference.cache
+C:\Users\mike_\source\repos\CsvUploader\src\BackEnd\CsvUploaderBackend\CsvUploader.Database\obj\Debug\Model.xml
+C:\Users\mike_\source\repos\CsvUploader\src\BackEnd\CsvUploaderBackend\CsvUploader.Database\obj\Debug\refactor.xml
+C:\Users\mike_\source\repos\CsvUploader\src\BackEnd\CsvUploaderBackend\CsvUploader.Database\obj\Debug\postdeploy.sql
+C:\Users\mike_\source\repos\CsvUploader\src\BackEnd\CsvUploaderBackend\CsvUploader.Database\obj\Debug\predeploy.sql
+C:\Users\mike_\source\repos\CsvUploader\src\BackEnd\CsvUploaderBackend\CsvUploader.Database\obj\Debug\CsvUploader.Database.dll
+C:\Users\mike_\source\repos\CsvUploader\src\BackEnd\CsvUploaderBackend\CsvUploader.Database\obj\Debug\CsvUploader.Database.pdb
+C:\Users\mike_\Source\Repos\CsvUploader\src\BackEnd\CsvUploader.Database\bin\Debug\CsvUploader.Database.dacpac
+C:\Users\mike_\Source\Repos\CsvUploader\src\BackEnd\CsvUploader.Database\bin\Debug\CsvUploader.Database.dll
+C:\Users\mike_\Source\Repos\CsvUploader\src\BackEnd\CsvUploader.Database\bin\Debug\CsvUploader.Database.pdb
+C:\Users\mike_\Source\Repos\CsvUploader\src\BackEnd\CsvUploader.Database\obj\Debug\CsvUploader.Database.sqlproj.AssemblyReference.cache
+C:\Users\mike_\Source\Repos\CsvUploader\src\BackEnd\CsvUploader.Database\obj\Debug\CsvUploader.Database.dll
+C:\Users\mike_\Source\Repos\CsvUploader\src\BackEnd\CsvUploader.Database\obj\Debug\CsvUploader.Database.pdb
