@@ -1,9 +1,18 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
-import styles from '../styles/Home.module.css'
-
-const inter = Inter({ subsets: ['latin'] })
+import { Box, Center, Container, Flex, Grid, GridItem, IconButton, Spacer } from '@chakra-ui/react'
+import Link from 'next/link'
+import {
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+} from '@chakra-ui/react'
+import { HamburgerIcon } from '@chakra-ui/icons'
 
 export default function Home() {
   return (
@@ -14,11 +23,24 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          test
-        </div>
+      <main>
+        <Center>
+          <Box border='1px solid gray.800'
+            bg='gray.300' 
+            w={['100%','75%','50%']} p={4}
+            >
+              <Flex>
+                <Center>
+                  Patient Data Uploader
+                </Center>
+                <Spacer/>
+                <Box>
+                  <IconButton aria-label='menu' icon={<HamburgerIcon/>}/>
+                </Box>
+              </Flex>
+          </Box>
 
+        </Center>
       </main>
     </>
   )
