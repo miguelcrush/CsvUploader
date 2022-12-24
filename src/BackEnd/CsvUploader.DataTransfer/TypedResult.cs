@@ -42,6 +42,7 @@ namespace CsvUploader.DataTransfer
 	{
 		None = 0,
 		InvalidRequest = 1,
-		GeneralError =2
+		GeneralError =2,
+		NotFound=3
 	}
 }

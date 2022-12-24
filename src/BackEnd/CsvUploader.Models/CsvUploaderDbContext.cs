@@ -9,6 +9,11 @@ namespace CsvUploader.Models
 {
 	public class CsvUploaderDbContext : DbContext
 	{
+		public CsvUploaderDbContext()
+		{
+
+		}
+
 		public CsvUploaderDbContext(DbContextOptions options)
 			: base(options)
 		{

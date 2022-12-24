@@ -8,6 +8,9 @@ using System.Data;
 
 namespace CsvUploader.Api.Services
 {
+	/// <summary>
+	/// Class describing a service that performs patient operations.
+	/// </summary>
 	public interface IPatientService
 	{
 		/// <summary>
@@ -25,6 +28,7 @@ namespace CsvUploader.Api.Services
 
 	}
 
+	///<inheritdoc/>
 	public class PatientService : IPatientService
 	{
 		private readonly CsvUploaderDbContext _dbContext;
@@ -120,7 +124,7 @@ namespace CsvUploader.Api.Services
 
 				patientDtos.Add(new PatientDTO()
 				{
-					Birthday = dataRow.Field<DateTime>("Birthday"),
+					Birthday = birthday,
 					FirstName = dataRow.Field<string>("First Name"),
 					LastName = dataRow.Field<string>("Last Name"),
 					Gender = dataRow.Field<string>("Gender")

@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CsvUploader.Api.Controllers
 {
+	/// <summary>
+	/// Base controller class for all controllers
+	/// </summary>
 	public abstract class BaseCsvUploaderController : ControllerBase
 	{
 		public async Task<IActionResult> HandleTypedResult<TResult,TController>(
@@ -20,6 +23,8 @@ namespace CsvUploader.Api.Controllers
 				{
 					case ErrorSummary.InvalidRequest:
 						return StatusCode(StatusCodes.Status400BadRequest, result.Message);
+					case ErrorSummary.NotFound:
+						return StatusCode(StatusCodes.Status404NotFound, result.Message);
 					case ErrorSummary.GeneralError:
 					case ErrorSummary.None:
 					default:

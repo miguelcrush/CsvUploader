@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvUploader.DataTransfer", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvUploader.Api", "CsvUploader.Api\CsvUploader.Api.csproj", "{BC736564-64DA-4369-A42D-576C18B74723}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{795593C4-CBBE-48E2-9720-C36B065C92DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvUploader.Api.Tests", "CsvUploader.Api.Tests\CsvUploader.Api.Tests.csproj", "{5BB72748-C42A-4896-8A7F-89307387602C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,9 +39,16 @@ Global
 		{BC736564-64DA-4369-A42D-576C18B74723}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC736564-64DA-4369-A42D-576C18B74723}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC736564-64DA-4369-A42D-576C18B74723}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BB72748-C42A-4896-8A7F-89307387602C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BB72748-C42A-4896-8A7F-89307387602C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BB72748-C42A-4896-8A7F-89307387602C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BB72748-C42A-4896-8A7F-89307387602C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5BB72748-C42A-4896-8A7F-89307387602C} = {795593C4-CBBE-48E2-9720-C36B065C92DA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {82AE8983-0072-4279-9538-7F3158B59691}

@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CsvUploader.Api.Controllers
 {
+	/// <summary>
+	/// Controller for patient operations
+	/// </summary>
 	[ApiController]
 	[Route("api/[controller]")]
 	public class PatientsController : BaseCsvUploaderController
@@ -11,6 +14,12 @@ namespace CsvUploader.Api.Controllers
 		private readonly ILogger<PatientsController> _logger;
 		private readonly IPatientService _patientService;
 
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="logger"></param>
+		/// <param name="patientService"></param>
 		public PatientsController(
 			ILogger<PatientsController> logger,
 			IPatientService patientService
