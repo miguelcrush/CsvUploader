@@ -24,23 +24,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Center>
-          <Box border='1px solid gray.800'
-            bg='gray.300' 
-            w={['100%','75%','50%']} p={4}
-            >
-              <Flex>
-                <Center>
-                  Patient Data Uploader
-                </Center>
-                <Spacer/>
-                <Box>
-                  <IconButton aria-label='menu' icon={<HamburgerIcon/>}/>
-                </Box>
-              </Flex>
-          </Box>
-
-        </Center>
+          
       </main>
     </>
   )
