@@ -35,9 +35,17 @@ namespace CsvUploader.Api.Controllers
 		/// <returns>A list of <see cref="PatientDTO"/></returns>
 		[HttpGet]
 		[ProducesResponseType(typeof(List<PatientDTO>), 200)]
-		public async Task<IActionResult> GetPatients()
+		public async Task<IActionResult> GetPatients(
+			[FromQuery] string? searchTerm = null,
+			[FromQuery] SortEnum sort = SortEnum.Ascending
+			) 
 		{
-			var result = await _patientService.GetPatients();
+			var searchParams = new PatientSearchDTO()
+			{
+				SearchTerm = searchTerm,
+				Sort = sort
+			};
+			var result = await _patientService.GetPatients(searchParams);
 			return Ok(result);
 		}
 

@@ -27,7 +27,7 @@ namespace CsvUploader.Api.Tests.Services
 			{
 				var patientService = new PatientService(dbContext, mapper);
 
-				var result = await patientService.GetPatients();
+				var result = await patientService.GetPatients(new PatientSearchDTO());
 
 				Assert.True(result.Count() == 2);
 			});

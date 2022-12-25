@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
-import { Box, Center, Container, Flex, Grid, GridItem, IconButton, Spacer } from '@chakra-ui/react'
+import { Box, Center, Checkbox, Container, Flex, FormControl, FormLabel, Grid, GridItem, IconButton, Input, Spacer, Stack, useToast } from '@chakra-ui/react'
 import Link from 'next/link'
 import {
   Drawer,
@@ -13,8 +13,66 @@ import {
   DrawerCloseButton,
 } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
+import { ChangeEvent, useEffect, useState } from 'react'
+import { PatientDTO } from '../types/patients'
+import { PatientCard } from '../components/PatientCard'
 
 export default function Home() {
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [patients, setPatients] = useState<PatientDTO[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>();
+  const [sort, setSort] = useState<string>('ascending');
+
+  const toast = useToast();
+
+  useEffect(() => {
+    getPatients();
+  }, [searchTerm, sort])
+
+  const getPatients = async () => {
+    setLoading(true);
+
+    var resp = await fetch(`/api/patients?searchTerm=${searchTerm}&sort=${sort}`, {
+      method: 'get'
+    })
+    if (!resp.ok) {
+      var text = await resp.text();
+      toast({
+        title: 'Error',
+        description: text,
+        status: 'error'
+      });
+    }
+    else {
+      var json = await resp.json() as PatientDTO[];
+      setPatients(json);
+    }
+
+  }
+
+  const onSearchTextChanged = (e:ChangeEvent<HTMLInputElement>) =>{
+    setSearchTerm(e.target.value);
+  }
+
+  const onSortChanged = (e: ChangeEvent<HTMLInputElement>) =>{
+    if(e.target.checked){
+      setSort('descending');
+    }
+    else{
+      setSort('ascending');
+    }
+  }
+
+  const patientMarkup = (patients || [])
+    .map(p => {
+      return (
+        <Box w={"full"}>
+          <PatientCard patient={p} />
+        </Box>
+      )
+    })
+
   return (
     <>
       <Head>
@@ -23,9 +81,21 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-          
-      </main>
+      <Stack id='stack' w={"full"}>
+        <Box mb={5}>
+          <FormControl>
+            <FormLabel>Search</FormLabel>
+            <Input type="text" onChange={e=> onSearchTextChanged(e)}></Input>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Sort</FormLabel>
+            <Checkbox onChange={(e)=>onSortChanged(e)}>Descending</Checkbox>
+          </FormControl>
+        </Box>
+        <Box>
+          {patientMarkup}
+        </Box>
+      </Stack>
     </>
   )
 }

@@ -16,7 +16,7 @@ namespace CsvUploader.Api.Tests.Controllers
         public async void GetPatients_ReturnsIActionResult_WithListOfAllPatients()
         {
             var patientService = new Mock<IPatientService>();
-            patientService.Setup(svc => svc.GetPatients())
+            patientService.Setup(svc => svc.GetPatients(new PatientSearchDTO()))
                 .Returns(GetTestPatients());
 
             var logger = new Mock<ILogger<PatientsController>>();

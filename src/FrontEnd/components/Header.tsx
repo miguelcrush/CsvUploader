@@ -1,5 +1,5 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { Box, Button, Center, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Flex, IconButton, Input, Spacer, Stack } from '@chakra-ui/react';
+import { Box, Button, Center, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Flex, Heading, IconButton, Input, Spacer, Stack } from '@chakra-ui/react';
 import Link from 'next/link';
 import * as React from 'react';
 
@@ -28,12 +28,12 @@ export const Header = () => {
                 <DrawerOverlay />
                 <DrawerContent>
                     <DrawerCloseButton />
-                    <DrawerHeader>Create your account</DrawerHeader>
+                    <DrawerHeader>Menu</DrawerHeader>
 
                     <DrawerBody>
                         <Stack>
-                            <Link href='/' onClick={()=>{onDrawerClose()}}>Patient List</Link>
-                            <Link href='/upload' onClick={()=>{onDrawerClose()}}>Upload CSV</Link>
+                            <Link href='/' onClick={() => { onDrawerClose() }}>Patient List</Link>
+                            <Link href='/upload' onClick={() => { onDrawerClose() }}>Upload CSV</Link>
                         </Stack>
                     </DrawerBody>
 
@@ -46,15 +46,17 @@ export const Header = () => {
             </Drawer>
             <Box border='1px solid gray.800'
                 bg='gray.300'
-                w={['100%', '75%', '50%']} p={4}
+                p={2}
             >
                 <Flex>
                     <Center>
-                        Patient Data Uploader
+                        <Heading size="md">
+                            Patient Data Uploader
+                        </Heading>
                     </Center>
                     <Spacer />
                     <Box>
-                        <IconButton ref={btnRef.current} aria-label='menu' icon={<HamburgerIcon />} onClick={()=>{onDrawerOpen()}} />
+                        <IconButton ref={btnRef.current} aria-label='menu' icon={<HamburgerIcon />} onClick={() => { onDrawerOpen() }} />
                     </Box>
                 </Flex>
             </Box>

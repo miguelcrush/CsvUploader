@@ -8,7 +8,6 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
       <Content>
-        <Header/>
         <Component {...pageProps} />
       </Content>
     </ChakraProvider>

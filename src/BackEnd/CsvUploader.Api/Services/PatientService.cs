@@ -17,7 +17,7 @@ namespace CsvUploader.Api.Services
 		/// Gets patient list
 		/// </summary>
 		/// <returns></returns>
-		Task<List<PatientDTO>> GetPatients();
+		Task<List<PatientDTO>> GetPatients(PatientSearchDTO searchDTO);
 
 		/// <summary>
 		/// Accepts a CSV delimited string and creates <see cref="Patient"/> records from it.
@@ -44,10 +44,35 @@ namespace CsvUploader.Api.Services
 		}
 
 		///<inheritdoc/>
-		public async Task<List<PatientDTO>> GetPatients()
+		public async Task<List<PatientDTO>> GetPatients(PatientSearchDTO searchDto)
 		{
-			var patients = await _dbContext.Patients.ToListAsync();
-			return patients.Select(p=> _mapper.Map<PatientDTO>(p)).ToList();
+			if (searchDto == null)
+			{
+				searchDto = new PatientSearchDTO();
+			}
+
+			var patientsQuery = _dbContext.Patients.Where(p=> 1 == 1);
+			if (!string.IsNullOrEmpty(searchDto.SearchTerm))
+			{
+				patientsQuery = patientsQuery
+					.Where(p =>
+						p.FirstName.Contains(searchDto.SearchTerm)
+						|| p.LastName.Contains(searchDto.SearchTerm)
+					);
+			}
+
+			if(searchDto.Sort == SortEnum.Ascending)
+			{
+				patientsQuery = patientsQuery.OrderBy(p => p.LastName);
+			}
+			else
+			{
+				patientsQuery = patientsQuery.OrderByDescending(p => p.LastName);
+			}
+
+			var results = await patientsQuery.ToListAsync();
+
+			return results.Select(p=> _mapper.Map<PatientDTO>(p)).ToList();
 		}
 
 		///<inheritdoc/>
