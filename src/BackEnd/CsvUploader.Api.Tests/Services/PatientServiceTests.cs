@@ -29,7 +29,7 @@ namespace CsvUploader.Api.Tests.Services
 
 				var result = await patientService.GetPatients(new PatientSearchDTO());
 
-				Assert.True(result.Count() == 2);
+				Assert.True(result.WasSuccessful && result.Payload.Count() == 2);
 			});
 		}
 

@@ -46,7 +46,26 @@ namespace CsvUploader.Api.Controllers
 				Sort = sort
 			};
 			var result = await _patientService.GetPatients(searchParams);
-			return Ok(result);
+			return await base.HandleTypedResult(result, 200, _logger);
+		}
+
+
+		/// <summary>
+		/// Updates a single patient
+		/// </summary>
+		/// <param name="patientId"></param>
+		/// <param name="patient"></param>
+		/// <returns></returns>
+		[HttpPut("{patientId}")]
+		[ProducesResponseType(typeof(PatientDTO), 200)]
+		public async Task<IActionResult> PutPatient([FromRoute] int patientId, [FromBody] PatientDTO patient)
+		{
+			if(patientId != patient?.Id)
+			{
+				return BadRequest("Id mismatch");
+			}
+			var result = await _patientService.SavePatient(patient);
+			return await base.HandleTypedResult(result,200, _logger);
 		}
 
 		/// <summary>

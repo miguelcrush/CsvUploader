@@ -36,7 +36,7 @@ namespace CsvUploader.Api.Tests.Controllers
         [Fact]
         public async void PostPatientsCsv_ReturnsIActionResult_WithListOfPatients()
         {
-            var testPatients = await GetTestPatients();
+            var testPatients = (await GetTestPatients()).Payload;
 
             var patientService = new Mock<IPatientService>();
             patientService.Setup(svc => svc.SavePatientCsv(It.IsAny<string>()))
@@ -66,7 +66,7 @@ namespace CsvUploader.Api.Tests.Controllers
         [Fact]
         public async void PostPatientsCsv_ReturnsBadRequestWhenMissingFile()
         {
-			var testPatients = await GetTestPatients();
+            var testPatients = (await GetTestPatients()).Payload;
 
 			var patientService = new Mock<IPatientService>();
 			patientService.Setup(svc => svc.SavePatientCsv(It.IsAny<string>()))
@@ -81,7 +81,7 @@ namespace CsvUploader.Api.Tests.Controllers
             Assert.True(result.GetType().IsAssignableFrom(typeof(BadRequestObjectResult)));
 		}
 
-		private async Task<List<PatientDTO>> GetTestPatients()
+		private async Task<TypedResult<List<PatientDTO>>> GetTestPatients()
         {
             var list = new List<PatientDTO>
             {
@@ -103,7 +103,7 @@ namespace CsvUploader.Api.Tests.Controllers
                 }
             };
 
-            return await Task.FromResult(list);
+            return await Task.FromResult(new TypedResult<List<PatientDTO>>( list));
         }
     }
 }

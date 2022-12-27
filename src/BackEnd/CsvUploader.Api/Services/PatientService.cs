@@ -17,7 +17,7 @@ namespace CsvUploader.Api.Services
 		/// Gets patient list
 		/// </summary>
 		/// <returns></returns>
-		Task<List<PatientDTO>> GetPatients(PatientSearchDTO searchDTO);
+		Task<TypedResult<List<PatientDTO>>> GetPatients(PatientSearchDTO searchDTO);
 
 		/// <summary>
 		/// Accepts a CSV delimited string and creates <see cref="Patient"/> records from it.
@@ -25,6 +25,13 @@ namespace CsvUploader.Api.Services
 		/// <param name="csv"></param>
 		/// <returns>The created patients.</returns>
 		Task<TypedResult<List<PatientDTO>>> SavePatientCsv(string csv);
+
+		/// <summary>
+		/// Saves a patient
+		/// </summary>
+		/// <param name="patient"></param>
+		/// <returns></returns>
+		Task<TypedResult<PatientDTO>> SavePatient(PatientDTO patient);
 
 	}
 
@@ -44,7 +51,7 @@ namespace CsvUploader.Api.Services
 		}
 
 		///<inheritdoc/>
-		public async Task<List<PatientDTO>> GetPatients(PatientSearchDTO searchDto)
+		public async Task<TypedResult<List<PatientDTO>>> GetPatients(PatientSearchDTO searchDto)
 		{
 			if (searchDto == null)
 			{
@@ -72,7 +79,7 @@ namespace CsvUploader.Api.Services
 
 			var results = await patientsQuery.ToListAsync();
 
-			return results.Select(p=> _mapper.Map<PatientDTO>(p)).ToList();
+			return new TypedResult<List<PatientDTO>>( results.Select(p=> _mapper.Map<PatientDTO>(p)).ToList());
 		}
 
 		///<inheritdoc/>
@@ -158,27 +165,50 @@ namespace CsvUploader.Api.Services
 
 			//validate using validator context (which utilizes data annotations on the model)
 			//we're doing it this way as its a CSV and the runtime cannot perform model validation against that
-
+			var results = new List<PatientDTO>();
 			foreach(var patientDto in patientDtos)
 			{
-				var validatorContext = new System.ComponentModel.DataAnnotations.ValidationContext(patientDto);
-				var validationResults = new List<ValidationResult>();
-				var isValid = Validator.TryValidateObject(patientDto, validatorContext, validationResults);
-				if (!isValid)
+				var saveResult = await SavePatient(patientDto);
+				if (!saveResult.WasSuccessful)
 				{
-					return new TypedResult<List<PatientDTO>>(ErrorSummary.InvalidRequest, string.Join(", ", validationResults.Select(v => v.ErrorMessage)));
+					return new TypedResult<List<PatientDTO>>(ErrorSummary.GeneralError, saveResult.Message);
 				}
+
+				results.Add(saveResult.Payload);
 			}
 
-			//save the records
-			//maintain a list of db-based objects that we can return
-			var mapped = patientDtos.Select(dto => _mapper.Map<Patient>(dto)).ToList();
-			_dbContext.Patients.AddRange(mapped);
+			//return the new rows
+			return new TypedResult<List<PatientDTO>>(results.Select(m => _mapper.Map<PatientDTO>(m)).ToList());
+		}
 
+		public async Task<TypedResult<PatientDTO>> SavePatient(PatientDTO patient)
+		{
+			if (patient == null)
+			{
+				return new TypedResult<PatientDTO>(ErrorSummary.InvalidRequest, $"{nameof(patient)} is required");
+			}
+
+			var validatorContext = new System.ComponentModel.DataAnnotations.ValidationContext(patient);
+			var validationResults = new List<ValidationResult>();
+			var isValid = Validator.TryValidateObject(patient, validatorContext, validationResults);
+			if (!isValid)
+			{
+				return new TypedResult<PatientDTO>(ErrorSummary.InvalidRequest, string.Join(", ", validationResults.Select(v => v.ErrorMessage)));
+			}
+
+			var mapped = _mapper.Map<Patient>(patient);
+
+			if (mapped.Id == 0)
+			{
+				_dbContext.Patients.Add(mapped);
+			}
+			else
+			{
+				_dbContext.Patients.Update(mapped);
+			}
 			await _dbContext.SaveChangesAsync();
 
-			//return the new rows
-			return new TypedResult<List<PatientDTO>>(mapped.Select(m => _mapper.Map<PatientDTO>(m)).ToList());
+			return new TypedResult<PatientDTO>(_mapper.Map<PatientDTO>(mapped));
 		}
 	}
 }

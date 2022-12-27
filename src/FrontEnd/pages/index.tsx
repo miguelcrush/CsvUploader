@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
-import { Box, Center, Checkbox, Container, Flex, FormControl, FormLabel, Grid, GridItem, IconButton, Input, Spacer, Stack, useToast } from '@chakra-ui/react'
+import { Box, Center, Checkbox, CircularProgress, Container, Flex, FormControl, FormLabel, Grid, GridItem, Heading, IconButton, Input, Spacer, Stack, useToast } from '@chakra-ui/react'
 import Link from 'next/link'
 import {
   Drawer,
@@ -21,8 +21,9 @@ export default function Home() {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [patients, setPatients] = useState<PatientDTO[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>();
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [sort, setSort] = useState<string>('ascending');
+  const [patientsBackup, setPatientsBackup] = useState<PatientDTO[]>();
 
   const toast = useToast();
 
@@ -33,7 +34,7 @@ export default function Home() {
   const getPatients = async () => {
     setLoading(true);
 
-    var resp = await fetch(`/api/patients?searchTerm=${searchTerm}&sort=${sort}`, {
+    var resp = await fetch(`/api/patients/list?searchTerm=${searchTerm}&sort=${sort}`, {
       method: 'get'
     })
     if (!resp.ok) {
@@ -46,29 +47,98 @@ export default function Home() {
     }
     else {
       var json = await resp.json() as PatientDTO[];
-      setPatients(json);
+      var formatted = json.map(j => {
+        return patientDataCleanup(j);
+      });
+      setPatients(formatted);
+      setPatientsBackup(formatted);
     }
 
+    setLoading(false);
   }
 
-  const onSearchTextChanged = (e:ChangeEvent<HTMLInputElement>) =>{
+  const patientDataCleanup = (p: PatientDTO): PatientDTO => {
+    p["birthday"] = new Date(p.birthday).toISOString().substring(0, 10);
+    return p;
+  }
+
+  const onSearchTextChanged = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   }
 
-  const onSortChanged = (e: ChangeEvent<HTMLInputElement>) =>{
-    if(e.target.checked){
+  const onSortChanged = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
       setSort('descending');
     }
-    else{
+    else {
       setSort('ascending');
     }
+  }
+
+  const onPatientSaveClicked = async (patient: PatientDTO) => {
+    var resp = await fetch(`/api/patients/${patient.id}`, {
+      method: 'put',
+      body: JSON.stringify(patient)
+    });
+
+    if (!resp.ok) {
+      var text = await resp.text();
+      toast({ title: "Error", description: text, status: "error" });
+      return;
+    }
+
+    var json = await resp.json();
+    var patientsCopy = patients.slice();
+    var existingIndex = patientsCopy.findIndex(p => { return p.id == patient.id });
+    if (existingIndex > -1) {
+      patientsCopy[existingIndex] = patientDataCleanup(json);
+      setPatients(patientsCopy);
+    }
+
+    setPatients(patientsCopy);
+  }
+
+  const onPatientSaveUndoClicked = (id: number) => {
+    if (!patientsBackup) {
+      return;
+    }
+    var original = patientsBackup.find(p => { return p.id == id });
+    if (!original) {
+      return;
+    }
+    var patientsCopy = patients.slice();
+    for (var i = 0; i < patientsCopy.length; i++) {
+      if (patientsCopy[i].id == id) {
+        patientsCopy[i] = original
+      }
+    }
+
+    setPatients(patientsCopy);
+  }
+
+  const onPatientChanged = (patient: PatientDTO) => {
+
+    var patientsCopied = patients.slice();
+    var existingIndex = patientsCopied.findIndex(p => p.id == patient.id);
+    if (existingIndex < 0) {
+      return;
+    }
+
+    console.log(patient);
+    patientsCopied[existingIndex] = patient;
+    setPatients(patientsCopied);
   }
 
   const patientMarkup = (patients || [])
     .map(p => {
       return (
-        <Box w={"full"}>
-          <PatientCard patient={p} />
+        <Box w={"full"} key={p.id}>
+          <PatientCard
+            patient={p}
+            onSaveClicked={() => onPatientSaveClicked(p)}
+            onCancelEditClicked={() => onPatientSaveUndoClicked(p.id)}
+            onChange={(patient) => { onPatientChanged(patient) }}
+          />
         </Box>
       )
     })
@@ -82,18 +152,35 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Stack id='stack' w={"full"}>
+        <Heading size="sm">
+          Patient List
+        </Heading>
         <Box mb={5}>
           <FormControl>
             <FormLabel>Search</FormLabel>
-            <Input type="text" onChange={e=> onSearchTextChanged(e)}></Input>
+            <Input type="text" onChange={e => onSearchTextChanged(e)}></Input>
           </FormControl>
           <FormControl>
             <FormLabel>Sort</FormLabel>
-            <Checkbox onChange={(e)=>onSortChanged(e)}>Descending</Checkbox>
+            <Checkbox onChange={(e) => onSortChanged(e)}>Descending</Checkbox>
           </FormControl>
         </Box>
         <Box>
-          {patientMarkup}
+          <>
+            {!loading && (
+              <>
+                {patients.length==0 && (
+                  <Box>
+                    No patients found.
+                  </Box>
+                )}
+                {patientMarkup}
+              </>
+            )}
+            {loading && (
+              <CircularProgress isIndeterminate />
+            )}
+          </>
         </Box>
       </Stack>
     </>
