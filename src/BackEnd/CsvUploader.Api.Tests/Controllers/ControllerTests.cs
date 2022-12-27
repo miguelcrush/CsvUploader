@@ -15,9 +15,12 @@ namespace CsvUploader.Api.Tests.Controllers
         [Fact]
         public async void GetPatients_ReturnsIActionResult_WithListOfAllPatients()
         {
+            var testPatients = (await GetTestPatients()).Payload;
             var patientService = new Mock<IPatientService>();
-            patientService.Setup(svc => svc.GetPatients(new PatientSearchDTO()))
-                .Returns(GetTestPatients());
+            patientService.Setup(svc => svc.GetPatients(It.IsAny<PatientSearchDTO>()))
+                .ReturnsAsync(() => {
+                    return new TypedResult<List<PatientDTO>>(testPatients);
+                    });
 
             var logger = new Mock<ILogger<PatientsController>>();
 
@@ -25,9 +28,9 @@ namespace CsvUploader.Api.Tests.Controllers
 
             var result = await controller.GetPatients();
 
-            Assert.True(result is OkObjectResult);
+            Assert.True(result is ObjectResult);
 
-            var okResult = result as OkObjectResult;
+            var okResult = result as ObjectResult;
 
             Assert.True(okResult.Value.GetType() == typeof(List<PatientDTO>));
             Assert.True((okResult.Value as List<PatientDTO>).Count == 2);
