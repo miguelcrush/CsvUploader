@@ -72,14 +72,6 @@ stages:
           targetPath: '$(Build.ArtifactStagingDirectory)'
           artifact: 'api'
           publishLocation: 'pipeline'
-          
-      - task: PowerShell@2
-        inputs:
-          targetType: 'inline'
-          script: |
-            # Write your PowerShell commands here.
-            
-            Write-Host $(ConnectionStrings-Default)
 
       - task: AzureRmWebAppDeployment@4
         inputs:
