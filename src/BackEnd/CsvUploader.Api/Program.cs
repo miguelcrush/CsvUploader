@@ -40,13 +40,9 @@ var app = builder.Build();
 
 var isDevelopment = app.Environment.IsDevelopment() || app.Environment.EnvironmentName.Equals("localhost", StringComparison.OrdinalIgnoreCase);
 
-// Configure the HTTP request pipeline.
-if (isDevelopment)
-{
-	app.UseSwagger();
-	app.UseSwaggerUI();
-	
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseHttpsRedirection();
 
