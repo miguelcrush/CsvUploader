@@ -81,6 +81,8 @@ stages:
           WebAppName: 'appsvc-csvuploader-api'
           packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
           JSONFiles: |
+            {
             "ConnectionStrings": {
                "Default" : "$(ConnectionStrings-Default)"
+            }
             }
