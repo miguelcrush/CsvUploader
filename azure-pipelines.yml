@@ -26,4 +26,5 @@ stages:
           script: |
             # Write your PowerShell commands here.
             
+            cd src/FrontEnd
             dir
