@@ -32,3 +32,11 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Pay-As-You-Go(37fbd454-93b6-42b6-846f-08d4dc56df31)'
+    appType: 'webApp'
+    WebAppName: 'appsvc-csvuploader-api'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
