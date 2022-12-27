@@ -1,58 +1,71 @@
-# ASP.NET
-# Build and test ASP.NET projects.
-# Add steps that publish symbols, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
-
 trigger:
-- main
+- master
 
 pool:
   vmImage: 'windows-latest'
 
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+stages:
+- stage: Build
 
-steps:
-- task: NuGetToolInstaller@1
+  jobs:
+    - job: build
+     
+      steps:
+      - task: UseDotNet@2
+        displayName: 'Use .NET 6 sdk'
+        inputs:
+          packageType: 'sdk'
+          version: 'net6.0'
+          includePreviewVersions: true
+              
+      - task: DotNetCoreCLI@2
+        displayName: Build solution
+        inputs:
+          command: 'build'
+          projects: '**/*.sln'
+          arguments: '--configuration $(buildConfiguration)'
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-- task: VSTest@2
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: '**\CsvUploader.Api.Tests.dll'
-    searchFolder: '$(build.artifactStagingDirectory)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+      - task: DotNetCoreCLI@2
+        displayName: Run unit tests
+        inputs:
+          command: 'test'
+          projects: '**/*Tests/*.csproj'
+          arguments: '--configuration $(buildConfiguration)'
+    
+- stage: Development
+  displayName: 'Deploy to Dev'
+  dependsOn: [ Build ]
+  condition: succeeded()
+  variables:
+  - group: bookstore
   
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
+  jobs:
+    - job:  DeployToDevelopment
+      displayName: 'Deploy Development'
+      variables:
+        sqlFile: '$(Build.SourcesDirectory)/SQL/sqlscript.sql'
+        
+      steps:
+      
+      # Publish it as .NET 6 self-contained application for linux runtime
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: publish
+          publishWebProjects: True
+          arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
+          zipAfterPublish: True
 
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    artifact: 'drop'
-    publishLocation: 'pipeline'
-- task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Pay-As-You-Go(37fbd454-93b6-42b6-846f-08d4dc56df31)'
-    appType: 'webApp'
-    WebAppName: 'appsvc-csvuploader-api'
-    packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      # Package the file and uploads them as an artifact of the build
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)'
+          artifact: 'api'
+          publishLocation: 'pipeline'
+
+      - task: AzureRmWebAppDeployment@4
+        inputs:
+          ConnectionType: 'AzureRM'
+          azureSubscription: 'Pay-As-You-Go(37fbd454-93b6-42b6-846f-08d4dc56df31)'
+          appType: 'webApp'
+          WebAppName: 'appsvc-csvuploader-api'
+          package: '$(Pipeline.Workspace)/**/*.zip'
