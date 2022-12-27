@@ -50,4 +50,4 @@ steps:
     azureSubscription: 'Pay-As-You-Go(37fbd454-93b6-42b6-846f-08d4dc56df31)'
     appType: 'webApp'
     WebAppName: 'appsvc-csvuploader-api'
-    packageForLinux: '$(System.ArtifactStagingDirectory)/**/*.zip'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
