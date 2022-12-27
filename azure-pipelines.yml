@@ -36,15 +36,11 @@ stages:
   displayName: 'Deploy to Dev'
   dependsOn: [ Build ]
   condition: succeeded()
-  variables:
-  - group: bookstore
   
   jobs:
     - job:  DeployToDevelopment
       displayName: 'Deploy Development'
-      variables:
-        sqlFile: '$(Build.SourcesDirectory)/SQL/sqlscript.sql'
-        
+      
       steps:
       
       # Publish it as .NET 6 self-contained application for linux runtime
