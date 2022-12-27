@@ -41,16 +41,22 @@ stages:
           projects: '**/*Tests/*.csproj'
           arguments: '--configuration $(buildConfiguration)'
     
-- stage: Development
-  displayName: 'Deploy to Dev'
+- stage: Deploy
+  displayName: 'Deploy'
   dependsOn: [ Build ]
   condition: succeeded()
   
   jobs:
-    - job:  DeployToDevelopment
-      displayName: 'Deploy Development'
+    - job:  Deploy
+      displayName: 'Deploy'
       
       steps:
+      - task: AzureKeyVault@2
+        inputs:
+          azureSubscription: 'Pay-As-You-Go(37fbd454-93b6-42b6-846f-08d4dc56df31)'
+          KeyVaultName: 'kv-csv-uploader'
+          SecretsFilter: '*'
+          RunAsPreJob: false
       
       # Publish it as .NET 6 self-contained application for linux runtime
       - task: DotNetCoreCLI@2
