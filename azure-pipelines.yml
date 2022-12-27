@@ -11,7 +11,7 @@ variables:
   package-version: '1.2.6'
   dotNetFramework: 'net6.0'
   dotNetVersion: '6.0.x'
-  targetRuntime: 'win-x64'
+  targetRuntime: 'win-x86'
 
 stages:
 - stage: Build
