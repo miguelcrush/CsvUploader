@@ -56,7 +56,7 @@ stages:
           azureSubscription: 'Pay-As-You-Go(37fbd454-93b6-42b6-846f-08d4dc56df31)'
           KeyVaultName: 'kv-csv-uploader'
           SecretsFilter: '*'
-          RunAsPreJob: false
+          RunAsPreJob: true
       
       # Publish it as .NET 6 self-contained application for linux runtime
       - task: DotNetCoreCLI@2
@@ -72,6 +72,14 @@ stages:
           targetPath: '$(Build.ArtifactStagingDirectory)'
           artifact: 'api'
           publishLocation: 'pipeline'
+          
+      - task: PowerShell@2
+        inputs:
+          targetType: 'inline'
+          script: |
+            # Write your PowerShell commands here.
+            
+            Write-Host $(ConnectionStrings-Default)
 
       - task: AzureRmWebAppDeployment@4
         inputs:
@@ -79,4 +87,8 @@ stages:
           azureSubscription: 'Pay-As-You-Go(37fbd454-93b6-42b6-846f-08d4dc56df31)'
           appType: 'webApp'
           WebAppName: 'appsvc-csvuploader-api'
-          package: '$(Pipeline.Workspace)/**/*.zip'
+          packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+          JSONFiles: |
+            "ConnectionStrings": {
+               "Default" : "$(ConnectionStrings-Default)"
+            }
