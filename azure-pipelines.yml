@@ -14,33 +14,6 @@ variables:
   targetRuntime: 'win-x86'
 
 stages:
-- stage: Build
-
-  jobs:
-    - job: build
-     
-      steps:
-      - task: UseDotNet@2
-        displayName: 'Use .NET 6 sdk'
-        inputs:
-          packageType: 'sdk'
-          version: $(dotNetVersion)
-          includePreviewVersions: true
-              
-      - task: DotNetCoreCLI@2
-        displayName: Build solution
-        inputs:
-          command: 'build'
-          projects: '**/*.csproj'
-          arguments: '--configuration $(buildConfiguration)'
-
-      - task: DotNetCoreCLI@2
-        displayName: Run unit tests
-        inputs:
-          command: 'test'
-          projects: '**/*Tests/*.csproj'
-          arguments: '--configuration $(buildConfiguration)'
-    
 - stage: Deploy
   displayName: 'Deploy'
   dependsOn: [ Build ]
@@ -80,9 +53,4 @@ stages:
           appType: 'webApp'
           WebAppName: 'appsvc-csvuploader-api'
           packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
-          JSONFiles: |
-            {
-            "ConnectionStrings": {
-               "Default" : "$(ConnectionStrings-Default)"
-            }
-            }
+          JSONFiles: '**/appsettings.json'
