@@ -503,3 +503,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 src/FrontEnd/env.local
+/src/BackEnd/CsvUploader.Api/appsettings.localhost.json
