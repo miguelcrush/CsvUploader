@@ -31,6 +31,9 @@ stages:
           SecretsFilter: '*'
           RunAsPreJob: true
       
+      - powershell: |
+          Write-Host "##vso[task.setvariable variable=ConnectionStrings.Default;]$(ConnectionStrings-Default)"
+      
       # Publish it as .NET 6 self-contained application for linux runtime
       - task: DotNetCoreCLI@2
         inputs:
