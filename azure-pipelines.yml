@@ -32,7 +32,7 @@ steps:
   inputs:
     testSelector: 'testAssemblies'
     testAssemblyVer2: '**\CsvUploader.Api.Tests.dll'
-    searchFolder: '$(System.artifactStagingDirectory)'
+    searchFolder: '$(build.artifactStagingDirectory)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
