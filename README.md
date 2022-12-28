@@ -31,7 +31,7 @@
 ### Database
 - EF Core
 - Schema defined in source control (SSDT project)
-  - Access avaialable upon request
+  - Access to server avaialable upon request
 
 ### CI / CD (backend)
 - See https://github.com/miguelcrush/CsvUploader/blob/main/azure-pipelines.yml for pipeline configuration
