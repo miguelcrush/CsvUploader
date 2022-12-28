@@ -7,7 +7,7 @@ type PageHeadingProps = {
 
 export const PageHeading = (props:PageHeadingProps)=>{
     return (
-    <Heading size="sm" id='heading'>
+    <Heading size="md" id='heading'>
         {props.heading}
     </Heading>
     )
