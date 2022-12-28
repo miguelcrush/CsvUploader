@@ -163,8 +163,6 @@ namespace CsvUploader.Api.Services
 				}) ;
 			}
 
-			//validate using validator context (which utilizes data annotations on the model)
-			//we're doing it this way as its a CSV and the runtime cannot perform model validation against that
 			var results = new List<PatientDTO>();
 			foreach(var patientDto in patientDtos)
 			{
@@ -211,6 +209,8 @@ namespace CsvUploader.Api.Services
 
 		private async Task<TypedResult> Validate(PatientDTO patient)
 		{
+			//validate using validator context (which utilizes data annotations on the model)
+			//we're doing it this way as its a CSV and the runtime cannot perform model validation against that, and why duplicate code?
 			var validatorContext = new System.ComponentModel.DataAnnotations.ValidationContext(patient);
 			var validationResults = new List<ValidationResult>();
 			var isValid = Validator.TryValidateObject(patient, validatorContext, validationResults);
