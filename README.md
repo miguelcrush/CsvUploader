@@ -20,6 +20,7 @@
 - CI/CD via ADO (backend only)
 
 ### Frontend
+- Responsive design
 - Technologies used:
   - React
   - nextJs (NodeJs server technology that supports quick prototyping & secret support) - this model was chosen specifically so the API key can be kept secure (never sent to client)
