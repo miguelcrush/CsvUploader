@@ -8,12 +8,34 @@ namespace CsvUploader.DataTransfer
 {
 	public class TypedResult
 	{
+
 		public string Message { get; set; }
 		public bool WasSuccessful { get; set; }
 		public ErrorSummary Summary { get; set; }
 
 		public Exception Exception { get; set; }
 
+		public TypedResult()
+		{
+
+		}
+
+		public TypedResult(Exception ex, string message)
+		{
+			this.Exception = ex;
+			this.Message = message;
+		}
+
+		public TypedResult(ErrorSummary summary, string message)
+		{
+			this.Summary = summary;
+			this.Message = message;
+		}
+
+		public static TypedResult SuccessfulResult()
+		{
+			return new TypedResult() { WasSuccessful = true };
+		}
 	}
 
 	/// <summary>

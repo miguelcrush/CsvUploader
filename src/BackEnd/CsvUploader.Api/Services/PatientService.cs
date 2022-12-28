@@ -171,7 +171,7 @@ namespace CsvUploader.Api.Services
 				var saveResult = await SavePatient(patientDto);
 				if (!saveResult.WasSuccessful)
 				{
-					return new TypedResult<List<PatientDTO>>(ErrorSummary.GeneralError, saveResult.Message);
+					return new TypedResult<List<PatientDTO>>(saveResult.Summary, saveResult.Message);
 				}
 
 				results.Add(saveResult.Payload);
@@ -188,12 +188,10 @@ namespace CsvUploader.Api.Services
 				return new TypedResult<PatientDTO>(ErrorSummary.InvalidRequest, $"{nameof(patient)} is required");
 			}
 
-			var validatorContext = new System.ComponentModel.DataAnnotations.ValidationContext(patient);
-			var validationResults = new List<ValidationResult>();
-			var isValid = Validator.TryValidateObject(patient, validatorContext, validationResults);
-			if (!isValid)
+			var validationResult = await Validate(patient);
+			if (!validationResult.WasSuccessful)
 			{
-				return new TypedResult<PatientDTO>(ErrorSummary.InvalidRequest, string.Join(", ", validationResults.Select(v => v.ErrorMessage)));
+				return new TypedResult<PatientDTO>(ErrorSummary.InvalidRequest, validationResult.Message);
 			}
 
 			var mapped = _mapper.Map<Patient>(patient);
@@ -209,6 +207,18 @@ namespace CsvUploader.Api.Services
 			await _dbContext.SaveChangesAsync();
 
 			return new TypedResult<PatientDTO>(_mapper.Map<PatientDTO>(mapped));
+		}
+
+		private async Task<TypedResult> Validate(PatientDTO patient)
+		{
+			var validatorContext = new System.ComponentModel.DataAnnotations.ValidationContext(patient);
+			var validationResults = new List<ValidationResult>();
+			var isValid = Validator.TryValidateObject(patient, validatorContext, validationResults);
+			if (!isValid)
+			{
+				return new TypedResult(ErrorSummary.InvalidRequest, string.Join(", ", validationResults.Select(v => v.ErrorMessage)));
+			}
+			return TypedResult.SuccessfulResult();
 		}
 	}
 }

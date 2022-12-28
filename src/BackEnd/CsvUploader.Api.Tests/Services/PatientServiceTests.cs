@@ -50,6 +50,20 @@ namespace CsvUploader.Api.Tests.Services
 			});
 		}
 
+		[Fact]
+		public async void PostPatientsCsv_InvalidFirstName()
+		{
+			var mapper = GetMapper();
+			await ExecuteWithContext(async (dbContext) =>
+			{
+				var patientService = new PatientService(dbContext, mapper);
+				var csv = "First Name,Last Name,Birthday,Gender\r\n,Davidson,2000-01-01,M\r\nGina,Geoffrys,2010-02-02,F";
+				var result = await patientService.SavePatientCsv(csv);
+
+				Assert.True(result.WasSuccessful == false && result.Message == "First Name is required.");
+			});
+		}
+
 		/// <summary>
 		/// Verifies that a poorly-formatted CSV results in a bad request response.
 		/// </summary>

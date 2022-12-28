@@ -1,5 +1,5 @@
 import { CheckIcon, EditIcon, SmallCloseIcon } from '@chakra-ui/icons';
-import { Box, Card, CardBody, CardHeader, CircularProgress, FormControl, FormLabel, Grid, GridItem, Heading, HStack, IconButton, Input, Select, Spacer } from '@chakra-ui/react';
+import { Box, Card, CardBody, CardHeader, CircularProgress, FormControl, FormErrorIcon, FormErrorMessage, FormHelperText, FormLabel, Grid, GridItem, Heading, HStack, IconButton, Input, Select, Spacer } from '@chakra-ui/react';
 import * as React from 'react';
 import { PatientDTO } from '../types/patients';
 
@@ -44,6 +44,11 @@ export const PatientCard = (props: PatientCardProps) => {
         setIsEditing(false);
         setIsSaving(false);
     }
+
+    const lastNameIsInvalid = !props.patient.lastName;
+    const firstNameIsInvalid = !props.patient.firstName;
+    const birthdayIsInvalid = !props.patient.birthday;
+    const genderIsInvalid = !props.patient.gender;
 
     return (
         <Card size="sm" w={"full"} key={props.patient.id}>
@@ -110,27 +115,55 @@ export const PatientCard = (props: PatientCardProps) => {
                         </HStack>
                     </CardHeader>
                     <CardBody>
-                        <HStack>
-                            <FormControl>
+                        <HStack pb={5}>
+                            <FormControl isInvalid={lastNameIsInvalid}>
                                 <FormLabel>Last Name</FormLabel>
                                 <Input type="text"  value={props.patient.lastName} onChange={(e) => { onLastNameChanged(e) }} />
+                                {!lastNameIsInvalid ? (
+                                    <FormHelperText>
+                                        The patient's last name.
+                                    </FormHelperText>
+                                ) : (
+                                    <FormErrorMessage>Required</FormErrorMessage>
+                                )}
                             </FormControl>
-                            <FormControl>
+                            <FormControl isInvalid={firstNameIsInvalid}>
                                 <FormLabel>First Name</FormLabel>
                                 <Input type="text" value={props.patient.firstName} onChange={(e) => { onFirstNameChanged(e) }} />
+                                {!firstNameIsInvalid ? (
+                                    <FormHelperText>
+                                        The patient's first name.
+                                    </FormHelperText>
+                                ) : (
+                                    <FormErrorMessage>Required</FormErrorMessage>
+                                )}
                             </FormControl>
                         </HStack>
                         <HStack>
-                            <FormControl>
+                            <FormControl isInvalid={genderIsInvalid}>
                                 <FormLabel>Gender</FormLabel>
                                 <Select placeholder="Select" value={props.patient.gender} onChange={(e) => { onGenderChanged(e) }}>
                                     <option value="M">Male</option>
                                     <option value="F">Female</option>
                                 </Select>
+                                {!genderIsInvalid ? (
+                                    <FormHelperText>
+                                        The patient's gender.
+                                    </FormHelperText>
+                                ) : (
+                                    <FormErrorMessage>Required</FormErrorMessage>
+                                )}
                             </FormControl>
-                            <FormControl>
+                            <FormControl isInvalid={birthdayIsInvalid}>
                                 <FormLabel>Birthday</FormLabel>
                                 <Input type="date" value={props.patient.birthday} onChange={(e) => { onBirthdayChanged(e) }} />
+                                {!lastNameIsInvalid ? (
+                                    <FormHelperText>
+                                        The patient's birthday.
+                                    </FormHelperText>
+                                ) : (
+                                    <FormErrorMessage>Required</FormErrorMessage>
+                                )}
                             </FormControl>
                         </HStack>
                     </CardBody>
