@@ -3,6 +3,9 @@
 - Lists uploaded patient information with the ability to search, sort and edit patient records
 - Supports the ability to upload a CSV with patient information
 
+## Known Issue
+- Upon cold launch, the API needs to spin back up which introduces some latency to the first request. The Vercel hosting platform (on the 'hobby' service - free plan) has a limit of 5 seconds until requests are timed out. These two items in combination may result in the first request to the app to be accompanied with a "FUNCTION INVOCATION TIMEOUT" message, but can be disregarded.
+
 ## Architecture
 - .NET 6.0 Web Api hosted in MS Azure (https://appsvc-csvuploader-api.azurewebsites.net/swagger/index.html)
 - NextJS frontend-backend hosted in Vercel (https://csv-uploader-miguelcrush.vercel.app/)
