@@ -39,3 +39,13 @@
 - Automated testing
 - Deployment to Azure Web App
 - Secrets (connection string for example) stored in Azure Key Vault
+
+## Running Locally
+### Frontend
+- CD to `/Frontend`
+- run `npm install`
+- configure `.env.local`
+ - `API_KEY=`, `API_BASE_URL=`
+### Backend
+- configure app settings
+ - `ApiKey`, `ConnectionStrings:Default`
