@@ -121,7 +121,7 @@ export const PatientCard = (props: PatientCardProps) => {
                                 <Input type="text"  value={props.patient.lastName} onChange={(e) => { onLastNameChanged(e) }} />
                                 {!lastNameIsInvalid ? (
                                     <FormHelperText>
-                                        The patient's last name.
+                                        The patient&apos;s last name.
                                     </FormHelperText>
                                 ) : (
                                     <FormErrorMessage>Required</FormErrorMessage>
@@ -132,7 +132,7 @@ export const PatientCard = (props: PatientCardProps) => {
                                 <Input type="text" value={props.patient.firstName} onChange={(e) => { onFirstNameChanged(e) }} />
                                 {!firstNameIsInvalid ? (
                                     <FormHelperText>
-                                        The patient's first name.
+                                        The patient&apos;s first name.
                                     </FormHelperText>
                                 ) : (
                                     <FormErrorMessage>Required</FormErrorMessage>
@@ -148,7 +148,7 @@ export const PatientCard = (props: PatientCardProps) => {
                                 </Select>
                                 {!genderIsInvalid ? (
                                     <FormHelperText>
-                                        The patient's gender.
+                                        The patient&apos;s gender.
                                     </FormHelperText>
                                 ) : (
                                     <FormErrorMessage>Required</FormErrorMessage>
@@ -159,7 +159,7 @@ export const PatientCard = (props: PatientCardProps) => {
                                 <Input type="date" value={props.patient.birthday} onChange={(e) => { onBirthdayChanged(e) }} />
                                 {!lastNameIsInvalid ? (
                                     <FormHelperText>
-                                        The patient's birthday.
+                                        The patient&apos;s birthday.
                                     </FormHelperText>
                                 ) : (
                                     <FormErrorMessage>Required</FormErrorMessage>
