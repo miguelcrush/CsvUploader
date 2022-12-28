@@ -25,6 +25,7 @@
   - React
   - nextJs (NodeJs server technology that supports quick prototyping & secret support) - this model was chosen specifically so the API key can be kept secure (never sent to client)
   - Chakra UI (component library with emphasis on accessibility)
+  - Cypress for testing
 - CI / CD via Vercel hosting (frontend only) 
 
 ### Database
