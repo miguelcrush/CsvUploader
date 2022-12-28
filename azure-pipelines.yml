@@ -14,42 +14,73 @@ variables:
   targetRuntime: 'win-x86'
 
 stages:
-  - stage: DeployWeb
+  - stage: Build
 
     jobs:
     - job: build
-    
+     
       steps:
-      - task: PowerShell@2
+      - task: UseDotNet@2
+        displayName: 'Use .NET 6 sdk'
         inputs:
-          targetType: 'inline'
-          script: |
-            # Write your PowerShell commands here.
-            
-            cd src/FrontEnd
-            dir
+          packageType: 'sdk'
+          version: $(dotNetVersion)
+          includePreviewVersions: true
+              
+      - task: DotNetCoreCLI@2
+        displayName: Build solution
+        inputs:
+          command: 'build'
+          projects: '**/*.csproj'
+          arguments: '--configuration $(buildConfiguration)'
+
+      - task: DotNetCoreCLI@2
+        displayName: Run unit tests
+        inputs:
+          command: 'test'
+          projects: '**/*Tests/*.csproj'
+          arguments: '--configuration $(buildConfiguration)'
+    
+  - stage: DeployApi
+    displayName: 'DeployApi'
+    dependsOn: [ Build ]
+    condition: succeeded()
+  
+    jobs:
+      - job: DeployApi
+        displayName: 'Deploy Api'
       
-      - task: Npm@1
-        inputs:
-          command: 'install'
-          workingDir: 'src/Frontend'
+        steps:
+        - task: AzureKeyVault@2
+          inputs:
+            azureSubscription: 'Pay-As-You-Go(37fbd454-93b6-42b6-846f-08d4dc56df31)'
+            KeyVaultName: 'kv-csv-uploader'
+            SecretsFilter: '*'
+            RunAsPreJob: true
+
+        - powershell: |
+            Write-Host "##vso[task.setvariable variable=ConnectionStrings.Default;]$(ConnectionStrings-Default)"
       
-      - task: Npm@1
-        inputs:
-          command: 'custom'
-          workingDir: 'src/Frontend'
-          customCommand: 'run build'
-      
-      - task: ArchiveFiles@2
-        inputs:
-          rootFolderOrFile: 'src/Frontend'
-          includeRootFolder: false
-          archiveType: 'zip'
-          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-          replaceExistingArchive: true
-      
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-          ArtifactName: 'drop'
-          publishLocation: 'Container'
+      # Publish it as .NET 6 self-contained application for linux runtime
+        - task: DotNetCoreCLI@2
+          inputs:
+            command: publish
+            publishWebProjects: True
+            arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
+            zipAfterPublish: True
+
+      # Package the file and uploads them as an artifact of the build
+        - task: PublishPipelineArtifact@1
+          inputs:
+            targetPath: '$(Build.ArtifactStagingDirectory)'
+            artifact: 'api'
+            publishLocation: 'pipeline'
+
+        - task: AzureRmWebAppDeployment@4
+          inputs:
+            ConnectionType: 'AzureRM'
+            azureSubscription: 'Pay-As-You-Go(37fbd454-93b6-42b6-846f-08d4dc56df31)'
+            appType: 'webApp'
+            WebAppName: 'appsvc-csvuploader-api'
+            packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+            JSONFiles: '**/appsettings.json'
