@@ -1,9 +1,9 @@
 # CsvUploader
-## Key Features:
+## Key Features
 - Lists uploaded patient information with the ability to search, sort and edit patient records
 - Supports the ability to upload a CSV with patient information
 
-## Architecture:
+## Architecture
 - .NET 6.0 Web Api hosted in MS Azure (https://appsvc-csvuploader-api.azurewebsites.net/swagger/index.html)
 - NextJS frontend-backend hosted in Vercel (https://csv-uploader-miguelcrush.vercel.app/)
 - MSSQL hosted in Azure
@@ -11,7 +11,7 @@
 - CI/CD hosted by Azure DevOps
 
 ## Details:
-### Web API:
+### Web API
 - Technologies used:
   - Automapper (for mapping Models to Data Transfer Objects)
   - Swagger (for API documentation)
