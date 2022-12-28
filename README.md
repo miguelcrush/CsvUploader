@@ -33,4 +33,8 @@
   - Access avaialable upon request
 
 ### CI / CD (backend)
-- See 
+- See https://github.com/miguelcrush/CsvUploader/blob/main/azure-pipelines.yml for pipeline configuration
+- Automated build
+- Automated testing
+- Deployment to Azure Web App
+- Secrets (connection string for example) stored in Azure Key Vault
