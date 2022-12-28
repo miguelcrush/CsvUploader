@@ -2,13 +2,15 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { createImportSpecifier } from "typescript";
 import APP_CONFIG from "../../../../config";
 
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method?.toLowerCase() == "get") {
         var url = `${APP_CONFIG.API_BASE_URL}/patients${queryToQueryString(req.query)}`;
         var resp = await fetch(url,
             {
-                method: 'get'
+                method: 'get',
+                headers: {
+                    apikey: APP_CONFIG.API_KEY || ''
+                }
             });
 
         if (!resp.ok) {
@@ -27,7 +29,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             method: "POST",
             body: req.body,
             headers:{
-                "Content-Type":  req.headers["content-type"] || ''
+                "Content-Type":  req.headers["content-type"] || '',
+                apikey: APP_CONFIG.API_KEY || ''
             }
         });
 

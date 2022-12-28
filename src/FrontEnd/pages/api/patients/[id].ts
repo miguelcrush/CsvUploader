@@ -9,7 +9,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 method:'put',
                 body: req.body,
                 headers:{
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    apikey: APP_CONFIG.API_KEY || ''
                 }
             });
             if(!resp.ok){

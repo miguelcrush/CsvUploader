@@ -56,7 +56,7 @@ export const Header = () => {
                     </Center>
                     <Spacer />
                     <Box>
-                        <IconButton ref={btnRef.current} aria-label='menu' icon={<HamburgerIcon />} onClick={() => { onDrawerOpen() }} />
+                        <IconButton ref={btnRef.current} id='hamburger-menu-icon' aria-label='menu' icon={<HamburgerIcon />} onClick={() => { onDrawerOpen() }} />
                     </Box>
                 </Flex>
             </Box>

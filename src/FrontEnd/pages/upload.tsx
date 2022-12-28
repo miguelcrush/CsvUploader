@@ -1,6 +1,8 @@
 import { Box, Button, CircularProgress, Heading, Input, Stack, useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import * as React from 'react';
+import { PageHead } from '../components/Head';
+import { PageHeading } from '../components/PageHeading';
 
 const UploadPage = () => {
 
@@ -55,22 +57,25 @@ const UploadPage = () => {
     }
 
     return (
-        <Stack w="full">
-            <Heading size="sm">
-                Patient Data Upload
-            </Heading>
-            <Box>
-                {isLoading && (
-                    <CircularProgress isIndeterminate />
-                )}
-                {!isLoading && (
-                    <>
-                        <Input type="file" name="file" onChange={fileChangeHandler} />
-                        <Button onClick={uploadFile} disabled={!isFilePicked} >Upload</Button>
-                    </>
-                )}
-            </Box>
-        </Stack>
+        <>
+            <PageHead
+                title='Upload CSV'
+            />
+            <Stack w="full">
+                <PageHeading heading="Upload CSV"/>
+                <Box>
+                    {isLoading && (
+                        <CircularProgress isIndeterminate />
+                    )}
+                    {!isLoading && (
+                        <>
+                            <Input type="file" name="file" onChange={fileChangeHandler} />
+                            <Button onClick={uploadFile} disabled={!isFilePicked} >Upload</Button>
+                        </>
+                    )}
+                </Box>
+            </Stack>
+        </>
     )
 }
 

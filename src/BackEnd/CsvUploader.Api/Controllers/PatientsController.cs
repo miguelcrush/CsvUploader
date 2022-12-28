@@ -1,3 +1,4 @@
+using CsvUploader.Api.Infrastructure;
 using CsvUploader.Api.Services;
 using CsvUploader.DataTransfer;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ namespace CsvUploader.Api.Controllers
 	/// </summary>
 	[ApiController]
 	[Route("api/[controller]")]
+	[RequiresApiKey]
 	public class PatientsController : BaseCsvUploaderController
 	{ 
 		private readonly ILogger<PatientsController> _logger;
