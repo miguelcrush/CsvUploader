@@ -86,6 +86,7 @@ export default function Home() {
     if (!resp.ok) {
       var text = await resp.text();
       toast({ title: "Error", description: text, status: "error" });
+      onPatientSaveUndoClicked(patient.id);
       return;
     }
 
